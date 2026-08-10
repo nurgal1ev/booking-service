@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/nurgal1ev/booking-service/internal/config"
+	"github.com/nurgal1ev/booking-service/internal/infrastructure/postgres"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	cfg := config.Load()
+	postgres.NewDb(cfg)
 }
