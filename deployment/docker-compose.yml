@@ -5,8 +5,6 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      PGDATA: /data/postgres
-    volumes:
-      - ./postgres-data:/data/postgres
+      POSTGRES_DB: booking
     ports:
       - "5432:5432"
