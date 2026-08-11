@@ -7,7 +7,7 @@ type Booking struct {
 	UserID uint
 	User   User `gorm:"foreignkey:UserID"`
 
-	PropertyID string
+	PropertyID uint
 	Property   Properties `gorm:"foreignkey:PropertyID"`
 
 	Price int
