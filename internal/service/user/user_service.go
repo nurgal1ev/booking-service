@@ -12,6 +12,7 @@ import (
 )
 
 type User struct {
+	ID        uint
 	Username  string
 	Email     string
 	Password  string
@@ -81,4 +82,21 @@ func (s *UserService) Create(ctx context.Context, u *User) (*models.User, error)
 	}
 
 	return &user, nil
+}
+
+func (s *UserService) FindByID(ctx context.Context, id uint) (*models.User, error) {
+	if id == 0 {
+		return nil, errors.New("invalid id")
+	}
+
+	user, err := s.userRepo.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, err
+	}
+
+	return user, err
 }
