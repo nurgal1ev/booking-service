@@ -100,3 +100,20 @@ func (s *UserService) FindByID(ctx context.Context, id uint) (*models.User, erro
 
 	return user, err
 }
+
+func (s *UserService) FindByEmail(ctx context.Context, email string) (*models.User, error) {
+	if email == "" {
+		return nil, errors.New("invalid email")
+	}
+
+	user, err := s.userRepo.FindByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, err
+	}
+
+	return user, err
+}
