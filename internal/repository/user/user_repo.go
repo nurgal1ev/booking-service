@@ -21,7 +21,7 @@ func (u *UserRepo) Create(ctx context.Context, user *models.User) error {
 	return query
 }
 
-func (u *UserRepo) FindByID(ctx context.Context, id int) (*models.User, error) {
+func (u *UserRepo) FindByID(ctx context.Context, id uint) (*models.User, error) {
 	var user models.User
 	err := u.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
 	if err != nil {
@@ -56,4 +56,25 @@ func (u *UserRepo) GetAll(ctx context.Context) ([]models.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func (u *UserRepo) Update(id int, username, email, password string) (*models.User, error) {
+	var user models.User
+
+	err := u.db.Model(&user).Where("id = ?", id).Updates(models.User{
+		Username: username,
+		Email:    email,
+		Password: password,
+	}).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (u *UserRepo) Delete(id uint) error {
+	result := u.db.Delete(&models.User{}, id)
+	return result.Error
 }
