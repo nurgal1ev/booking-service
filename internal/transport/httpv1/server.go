@@ -29,6 +29,7 @@ func StartServer(h Handlers) {
 	api := humachi.New(r, humaCfg)
 
 	huma.Post(api, "/api/v1/auth/register", h.User.RegisterHandler)
+	huma.Post(api, "/api/v1/auth/login", h.User.LoginHandler)
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		panic(err)

@@ -15,3 +15,16 @@ type RegisterOutput struct {
 		Message string `json:"message"`
 	}
 }
+
+type LoginInput struct {
+	Body struct {
+		Email    string `json:"email"     format:"email"`
+		Password string `json:"password"  minLength:"7" maxLength:"64"`
+	}
+}
+
+type LoginOutput struct {
+	Body struct {
+		AccessToken string `json:"accessToken"`
+	}
+}

@@ -33,3 +33,15 @@ func (u *UserHandler) RegisterHandler(ctx context.Context, input *RegisterInput)
 
 	return resp, nil
 }
+
+func (u *UserHandler) LoginHandler(ctx context.Context, input *LoginInput) (*LoginOutput, error) {
+	token, err := u.userService.Login(ctx, input.Body.Email, input.Body.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &LoginOutput{}
+	resp.Body.AccessToken = token
+
+	return resp, nil
+}
