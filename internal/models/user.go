@@ -8,9 +8,11 @@ import (
 
 type User struct {
 	gorm.Model
+	FirstName string
+	LastName  string
 	Username  string
 	Email     string `gorm:"unique"`
-	Password  string
+	Password  string `gorm:"unique"`
 	Role      string
 	UpdatedAt *time.Time
 }

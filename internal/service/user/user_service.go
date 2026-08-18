@@ -13,6 +13,8 @@ import (
 
 type User struct {
 	ID        uint
+	FirstName string
+	LastName  string
 	Username  string
 	Email     string
 	Password  string
@@ -70,10 +72,12 @@ func (s *UserService) Create(ctx context.Context, u *User) (*models.User, error)
 	}
 
 	var user = models.User{
-		Username: u.Username,
-		Email:    u.Email,
-		Password: string(hashedPassword),
-		Role:     u.Role,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+		Username:  u.Username,
+		Email:     u.Email,
+		Password:  string(hashedPassword),
+		Role:      u.Role,
 	}
 
 	err = s.userRepo.Create(ctx, &user)

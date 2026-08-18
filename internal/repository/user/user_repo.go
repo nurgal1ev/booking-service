@@ -58,13 +58,15 @@ func (u *UserRepo) GetAll(ctx context.Context) ([]models.User, error) {
 	return users, nil
 }
 
-func (u *UserRepo) Update(id int, username, email, password string) (*models.User, error) {
+func (u *UserRepo) Update(id int, firstname, lastname, username, email, password string) (*models.User, error) {
 	var user models.User
 
 	err := u.db.Model(&user).Where("id = ?", id).Updates(models.User{
-		Username: username,
-		Email:    email,
-		Password: password,
+		FirstName: firstname,
+		LastName:  lastname,
+		Username:  username,
+		Email:     email,
+		Password:  password,
 	}).Error
 
 	if err != nil {
