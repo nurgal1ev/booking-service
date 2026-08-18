@@ -3,12 +3,10 @@ package main
 import (
 	"log"
 
+	"github.com/nurgal1ev/booking-service/internal/app"
 	"github.com/nurgal1ev/booking-service/internal/config"
 	"github.com/nurgal1ev/booking-service/internal/infrastructure/postgres"
-	userRepo "github.com/nurgal1ev/booking-service/internal/repository/user"
-	userService "github.com/nurgal1ev/booking-service/internal/service/user"
-	httpv1 "github.com/nurgal1ev/booking-service/internal/transport/httpv1"
-	userHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/user"
+	"github.com/nurgal1ev/booking-service/internal/transport/httpv1"
 )
 
 func main() {
@@ -19,13 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	userRepository := userRepo.NewUserRepo(db.DB)
-	userService := userService.NewUserService(userRepository)
-	userHandler := userHandler.NewUserHandler(userService)
-
-	handlers := httpv1.Handlers{
-		User: userHandler,
-	}
+	handlers := app.InitHandlers(db.DB)
 
 	httpv1.StartServer(handlers)
 }
