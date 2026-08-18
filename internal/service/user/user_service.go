@@ -23,11 +23,15 @@ type User struct {
 }
 
 type UserService struct {
-	userRepo *user.UserRepo
+	userRepo  *user.UserRepo
+	jwtSecret string
 }
 
-func NewUserService(userRepo *user.UserRepo) *UserService {
-	return &UserService{userRepo}
+func NewUserService(userRepo *user.UserRepo, jwtSecret string) *UserService {
+	return &UserService{
+		userRepo:  userRepo,
+		jwtSecret: jwtSecret,
+	}
 }
 
 func (u *User) Validate() error {
@@ -120,4 +124,18 @@ func (s *UserService) FindByEmail(ctx context.Context, email string) (*models.Us
 	}
 
 	return user, err
+}
+
+func (s *UserService) Login(ctx context.Context, email, password string) (string, error) {
+	user, err := s.userRepo.FindByEmail(ctx, email)
+	if err != nil {
+		return "", errors.New("invalid email")
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return "", errors.New("invalid credentials")
+	}
+
+	token, err := generateJWT(user.ID, user.Email, s.jwtSecret)
+	return token, nil
 }
