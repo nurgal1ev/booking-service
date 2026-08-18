@@ -6,17 +6,29 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
+
+	userHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/user"
 )
 
-func StartServer() {
+type Handlers struct {
+	User *userHandler.UserHandler
+}
+
+func StartServer(h Handlers) {
 	r := chi.NewMux()
 
 	humaCfg := huma.DefaultConfig("Booking Api", "1.0.0")
+	humaCfg.Components.SecuritySchemes = map[string]*huma.SecurityScheme{
+		"jwt": {
+			Type:         "http",
+			Scheme:       "bearer",
+			BearerFormat: "JWT",
+		},
+	}
 
 	api := humachi.New(r, humaCfg)
 
-	huma.Post(api, "/api/v1/auth/register", user.RegisterHandler)
-	huma.Post(api, "/api/v1/auth/login", user.LoginHandler)
+	huma.Post(api, "/api/v1/auth/register", h.User.RegisterHandler)
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		panic(err)
