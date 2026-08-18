@@ -17,7 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	handlers := app.InitHandlers(db.DB)
+	handlers := app.InitHandlers(db.DB, cfg)
 
 	httpv1.StartServer(handlers)
 }
