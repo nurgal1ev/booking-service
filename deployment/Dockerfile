@@ -1,4 +1,4 @@
-FROM golang:1.25.1 AS base
+FROM golang:1.26.0 AS base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc g++ libwebp-dev git ca-certificates \
