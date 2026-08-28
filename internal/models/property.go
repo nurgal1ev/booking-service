@@ -13,5 +13,5 @@ type Property struct {
 	PropertyType  string `gorm:"default:hotel"`
 
 	OwnerID uint
-	Owner   User `gorm:"foreignkey:UserID"`
+	Owner   User `gorm:"foreignkey:OwnerID"`
 }
