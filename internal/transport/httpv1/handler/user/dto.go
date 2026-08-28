@@ -12,7 +12,8 @@ type RegisterInput struct {
 
 type RegisterOutput struct {
 	Body struct {
-		Message string `json:"message"`
+		Message     string `json:"message"`
+		AccessToken string `json:"accessToken"`
 	}
 }
 

@@ -23,12 +23,18 @@ func (u *UserHandler) RegisterHandler(ctx context.Context, input *RegisterInput)
 		Password:  input.Body.Password,
 	}
 
-	_, err := u.userService.Create(ctx, user)
+	createdUser, err := u.userService.Create(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := u.userService.GenerateToken(createdUser.ID, createdUser.Email)
 	if err != nil {
 		return nil, err
 	}
 
 	resp := &RegisterOutput{}
+	resp.Body.AccessToken = token
 	resp.Body.Message = "successful registration"
 
 	return resp, nil

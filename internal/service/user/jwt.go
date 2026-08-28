@@ -15,3 +15,7 @@ func generateJWT(userID uint, email string, secret string) (string, error) {
 
 	return token.SignedString([]byte(secret))
 }
+
+func (s *UserService) GenerateToken(userID uint, email string) (string, error) {
+	return generateJWT(userID, email, s.jwtSecret)
+}
