@@ -58,10 +58,8 @@ func (u *UserRepo) GetAll(ctx context.Context) ([]models.User, error) {
 	return users, nil
 }
 
-func (u *UserRepo) Update(id int, firstname, lastname, username, email, password string) (*models.User, error) {
-	var user models.User
-
-	err := u.db.Model(&user).Where("id = ?", id).Updates(models.User{
+func (u *UserRepo) Update(ctx context.Context, id int, firstname, lastname, username, email, password string) (*models.User, error) {
+	err := u.db.WithContext(ctx).Model(&models.User{}).Where("id = ?", id).Updates(models.User{
 		FirstName: firstname,
 		LastName:  lastname,
 		Username:  username,
@@ -73,10 +71,25 @@ func (u *UserRepo) Update(id int, firstname, lastname, username, email, password
 		return nil, err
 	}
 
+	var user models.User
+	err = u.db.WithContext(ctx).First(&user, id).Error
+	if err != nil {
+		return nil, err
+	}
+
 	return &user, nil
 }
 
-func (u *UserRepo) Delete(id uint) error {
-	result := u.db.Delete(&models.User{}, id)
-	return result.Error
+func (u *UserRepo) Delete(ctx context.Context, id uint) error {
+	result := u.db.WithContext(ctx).Delete(&models.User{}, id)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New("property not found")
+	}
+
+	return nil
 }
