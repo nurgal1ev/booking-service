@@ -1,5 +1,5 @@
 >### Requirements:
->#### GO version: 1.25.1
+>#### GO version: 1.26.0
 
 >>**Docker**: required
 >>
