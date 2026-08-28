@@ -19,7 +19,7 @@ func NewDb(c *config.Config) (*Db, error) {
 
 	err = db.AutoMigrate(
 		models.User{},
-		models.Properties{},
+		models.Property{},
 		models.Booking{},
 	)
 	if err != nil {
