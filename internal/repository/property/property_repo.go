@@ -34,7 +34,6 @@ type UpdatePropertyRequest struct {
 	Country       *string
 	PricePerNight *int
 	PropertyType  *string
-	OwnerID       *uint
 }
 
 func (p *PropertyRepo) Create(ctx context.Context, property *models.Property) error {
