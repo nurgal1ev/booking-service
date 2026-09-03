@@ -1,13 +1,18 @@
 package middleware
 
 import (
+	"context"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
 )
+
+type contextKey string
+
+const UserIDKey contextKey = "user_id"
+const UserRoleKey contextKey = "user_role"
 
 func AuthMiddleware(secret string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -28,7 +33,6 @@ func AuthMiddleware(secret string) func(http.Handler) http.Handler {
 						token.Header["alg"],
 					)
 				}
-
 				return []byte(secret), nil
 			})
 
@@ -49,9 +53,22 @@ func AuthMiddleware(secret string) func(http.Handler) http.Handler {
 				return
 			}
 
-			r.Header.Set("user_id", strconv.FormatUint(uint64(userID), 10))
+			role, _ := claims["role"].(string)
 
-			next.ServeHTTP(w, r)
+			ctx := context.WithValue(r.Context(), UserIDKey, uint(userID))
+			ctx = context.WithValue(ctx, UserRoleKey, role)
+
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
+}
+
+func GetUserIDFromContext(ctx context.Context) (uint, bool) {
+	userID, ok := ctx.Value(UserIDKey).(uint)
+	return userID, ok
+}
+
+func GetUserRoleFromContext(ctx context.Context) (string, bool) {
+	role, ok := ctx.Value(UserRoleKey).(string)
+	return role, ok
 }
