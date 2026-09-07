@@ -4,9 +4,14 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/nurgal1ev/booking-service/internal/transport/middleware"
 )
 
-func RegisterRoutes(api huma.API, handler *PropertyHandler) {
+func RegisterRoutes(api huma.API, handler *PropertyHandler, authSecret string) {
+	authMiddleware := huma.Middlewares{
+		middleware.AuthMiddleware(api, authSecret),
+	}
+
 	huma.Register(api, huma.Operation{
 		Method:        http.MethodPost,
 		Path:          "/api/v1/properties",
@@ -15,6 +20,7 @@ func RegisterRoutes(api huma.API, handler *PropertyHandler) {
 		Description:   "Создает новый объект недвижимости для текущего пользователя",
 		Security:      []map[string][]string{{"jwt": {}}},
 		DefaultStatus: http.StatusCreated,
+		Middlewares:   authMiddleware,
 	}, handler.CreateProperty)
 
 	huma.Register(api, huma.Operation{

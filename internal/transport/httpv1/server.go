@@ -6,6 +6,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
+	"github.com/nurgal1ev/booking-service/internal/config"
 	propertyHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/property"
 
 	userHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/user"
@@ -16,7 +17,7 @@ type Handlers struct {
 	Property *propertyHandler.PropertyHandler
 }
 
-func StartServer(h Handlers) {
+func StartServer(h Handlers, cfg *config.Config) {
 	r := chi.NewMux()
 
 	humaCfg := huma.DefaultConfig("Booking Api", "1.0.0")
@@ -31,7 +32,7 @@ func StartServer(h Handlers) {
 	api := humachi.New(r, humaCfg)
 
 	userHandler.RegisterRoutes(api, h.User)
-	propertyHandler.RegisterRoutes(api, h.Property)
+	propertyHandler.RegisterRoutes(api, h.Property, cfg.Auth.Secret)
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		panic(err)
