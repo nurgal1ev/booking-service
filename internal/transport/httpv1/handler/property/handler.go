@@ -24,26 +24,26 @@ func (h *PropertyHandler) CreateProperty(ctx context.Context, input *CreatePrope
 		return nil, huma.Error401Unauthorized("user not authenticated")
 	}
 
-	if input.Name == "" {
+	if input.Body.Name == "" {
 		return nil, huma.Error400BadRequest("name is required")
 	}
 
-	if input.PricePerNight <= 0 {
+	if input.Body.PricePerNight <= 0 {
 		return nil, huma.Error400BadRequest("price per night must be greater than 0")
 	}
 
-	if input.PropertyType == "" {
+	if input.Body.PropertyType == "" {
 		return nil, huma.Error400BadRequest("property type is required")
 	}
 
 	property := &property.Property{
-		Name:          input.Name,
-		Description:   input.Description,
-		Address:       input.Address,
-		City:          input.City,
-		Country:       input.Country,
-		PricePerNight: input.PricePerNight,
-		PropertyType:  input.PropertyType,
+		Name:          input.Body.Name,
+		Description:   input.Body.Description,
+		Address:       input.Body.Address,
+		City:          input.Body.City,
+		Country:       input.Body.Country,
+		PricePerNight: input.Body.PricePerNight,
+		PropertyType:  input.Body.PropertyType,
 		OwnerID:       userID,
 	}
 
@@ -61,5 +61,27 @@ func (h *PropertyHandler) CreateProperty(ctx context.Context, input *CreatePrope
 		Country:       result.Country,
 		PricePerNight: result.PricePerNight,
 		PropertyType:  result.PropertyType,
+	}, nil
+}
+
+func (h *PropertyHandler) GetProperty(ctx context.Context, input *GetPropertyInput) (*PropertyDTO, error) {
+	property, err := h.propertyService.GetById(ctx, input.ID)
+	if err != nil {
+		return nil, huma.Error404NotFound("property not found")
+	}
+
+	if property == nil {
+		return nil, huma.Error404NotFound("property not found")
+	}
+
+	return &PropertyDTO{
+		ID:            property.ID,
+		Name:          property.Name,
+		Description:   property.Description,
+		Address:       property.Address,
+		City:          property.City,
+		Country:       property.Country,
+		PricePerNight: property.PricePerNight,
+		PropertyType:  property.PropertyType,
 	}, nil
 }
