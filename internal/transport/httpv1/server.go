@@ -6,12 +6,14 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
+	propertyHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/property"
 
 	userHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/user"
 )
 
 type Handlers struct {
-	User *userHandler.UserHandler
+	User     *userHandler.UserHandler
+	Property *propertyHandler.PropertyHandler
 }
 
 func StartServer(h Handlers) {
@@ -28,8 +30,8 @@ func StartServer(h Handlers) {
 
 	api := humachi.New(r, humaCfg)
 
-	huma.Post(api, "/api/v1/auth/register", h.User.RegisterHandler)
-	huma.Post(api, "/api/v1/auth/login", h.User.LoginHandler)
+	userHandler.RegisterRoutes(api, h.User)
+	propertyHandler.RegisterRoutes(api, h.Property)
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		panic(err)
