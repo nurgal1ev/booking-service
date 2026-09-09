@@ -13,15 +13,14 @@ func RegisterRoutes(api huma.API, handler *PropertyHandler, authSecret string) {
 	}
 
 	huma.Register(api, huma.Operation{
-		Method:        http.MethodPost,
-		Path:          "/api/v1/properties",
-		Summary:       "Создать объект недвижимости",
-		Tags:          []string{"Properties"},
-		Description:   "Создает новый объект недвижимости для текущего пользователя",
-		Security:      []map[string][]string{{"jwt": {}}},
-		DefaultStatus: http.StatusCreated,
-		Middlewares:   authMiddleware,
-	}, handler.CreateProperty)
+		Method:      http.MethodPost,
+		Path:        "/api/v1/properties",
+		Summary:     "Создать объект недвижимости",
+		Tags:        []string{"Properties"},
+		Description: "Создает новый объект недвижимости для текущего пользователя",
+		Security:    []map[string][]string{{"jwt": {}}},
+		Middlewares: authMiddleware,
+	}, handler.CreatePropertyHandler)
 
 	huma.Register(api, huma.Operation{
 		Method:      http.MethodGet,
@@ -29,5 +28,5 @@ func RegisterRoutes(api huma.API, handler *PropertyHandler, authSecret string) {
 		Summary:     "Получить объект недвижимости",
 		Tags:        []string{"Properties"},
 		Description: "Возвращает объект недвижимости по ID",
-	}, handler.GetProperty)
+	}, handler.GetPropertyHandler)
 }

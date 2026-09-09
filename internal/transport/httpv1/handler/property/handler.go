@@ -18,7 +18,7 @@ func NewPropertyHandler(propertyService *property.PropertyService) *PropertyHand
 	}
 }
 
-func (h *PropertyHandler) CreateProperty(ctx context.Context, input *CreatePropertyInput) (*CreatePropertyOutput, error) {
+func (h *PropertyHandler) CreatePropertyHandler(ctx context.Context, input *CreatePropertyInput) (*CreatePropertyOutput, error) {
 	userID, ok := middleware.GetUserIDFromContext(ctx)
 	if !ok || userID == 0 {
 		return nil, huma.Error401Unauthorized("user not authenticated")
@@ -53,18 +53,29 @@ func (h *PropertyHandler) CreateProperty(ctx context.Context, input *CreatePrope
 	}
 
 	return &CreatePropertyOutput{
-		ID:            result.ID,
-		Name:          result.Name,
-		Description:   result.Description,
-		Address:       result.Address,
-		City:          result.City,
-		Country:       result.Country,
-		PricePerNight: result.PricePerNight,
-		PropertyType:  result.PropertyType,
+		Body: struct {
+			ID            uint   `json:"id"`
+			Name          string `json:"name"`
+			Description   string `json:"description"`
+			Address       string `json:"address"`
+			City          string `json:"city"`
+			Country       string `json:"country"`
+			PricePerNight int    `json:"price_per_night"`
+			PropertyType  string `json:"property_type"`
+		}{
+			ID:            result.ID,
+			Name:          result.Name,
+			Description:   result.Description,
+			Address:       result.Address,
+			City:          result.City,
+			Country:       result.Country,
+			PricePerNight: result.PricePerNight,
+			PropertyType:  result.PropertyType,
+		},
 	}, nil
 }
 
-func (h *PropertyHandler) GetProperty(ctx context.Context, input *GetPropertyInput) (*PropertyDTO, error) {
+func (h *PropertyHandler) GetPropertyHandler(ctx context.Context, input *GetPropertyInput) (*GetPropertyOutput, error) {
 	property, err := h.propertyService.GetById(ctx, input.ID)
 	if err != nil {
 		return nil, huma.Error404NotFound("property not found")
@@ -74,14 +85,25 @@ func (h *PropertyHandler) GetProperty(ctx context.Context, input *GetPropertyInp
 		return nil, huma.Error404NotFound("property not found")
 	}
 
-	return &PropertyDTO{
-		ID:            property.ID,
-		Name:          property.Name,
-		Description:   property.Description,
-		Address:       property.Address,
-		City:          property.City,
-		Country:       property.Country,
-		PricePerNight: property.PricePerNight,
-		PropertyType:  property.PropertyType,
+	return &GetPropertyOutput{
+		Body: struct {
+			ID            uint   `json:"id"`
+			Name          string `json:"name"`
+			Description   string `json:"description"`
+			Address       string `json:"address"`
+			City          string `json:"city"`
+			Country       string `json:"country"`
+			PricePerNight int    `json:"price_per_night"`
+			PropertyType  string `json:"property_type"`
+		}{
+			ID:            property.ID,
+			Name:          property.Name,
+			Description:   property.Description,
+			Address:       property.Address,
+			City:          property.City,
+			Country:       property.Country,
+			PricePerNight: property.PricePerNight,
+			PropertyType:  property.PropertyType,
+		},
 	}, nil
 }
