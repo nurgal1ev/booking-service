@@ -19,5 +19,5 @@ func main() {
 
 	handlers := app.InitHandlers(db.DB, cfg)
 
-	httpv1.StartServer(handlers)
+	httpv1.StartServer(handlers, cfg)
 }
