@@ -2,7 +2,7 @@ root = "."
 tmp_dir = "build"
 
 [build]
-  cmd = "go build -o ./build/app ./cmd/app"
+  cmd = "go build -buildvcs=false -o ./build/app ./cmd/app"
   bin = "build/app"
   include_ext = ["go"]
   delay = 1000
