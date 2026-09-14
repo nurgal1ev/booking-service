@@ -160,3 +160,30 @@ func (h *PropertyHandler) UpdatePropertyHandler(ctx context.Context, input *Upda
 		},
 	}, nil
 }
+
+func (h *PropertyHandler) DeletePropertyHandler(ctx context.Context, input *DeletePropertyInput) (*DeletePropertyOutput, error) {
+	propertyID, err := h.propertyService.GetById(ctx, input.ID)
+	if err != nil {
+		return nil, huma.Error404NotFound("property not found")
+	}
+
+	userID, ok := middleware.GetUserIDFromContext(ctx)
+	if !ok || userID == 0 {
+		return nil, huma.Error401Unauthorized("user not authenticated")
+	}
+
+	userRole, _ := middleware.GetUserRoleFromContext(ctx)
+
+	err = h.propertyService.Delete(ctx, propertyID.ID, userID, userRole)
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeletePropertyOutput{
+		Body: struct {
+			Message string `json:"message"`
+		}{
+			Message: "property deleted successfully",
+		},
+	}, nil
+}

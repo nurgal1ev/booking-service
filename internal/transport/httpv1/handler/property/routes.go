@@ -39,4 +39,14 @@ func RegisterRoutes(api huma.API, handler *PropertyHandler, authSecret string) {
 		Security:    []map[string][]string{{"jwt": {}}},
 		Middlewares: authMiddleware,
 	}, handler.UpdatePropertyHandler)
+
+	huma.Register(api, huma.Operation{
+		Method:      http.MethodDelete,
+		Path:        "/api/v1/properties/{id}",
+		Summary:     "Удалить объект",
+		Tags:        []string{"Properties"},
+		Description: "Удалить объект",
+		Security:    []map[string][]string{{"jwt": {}}},
+		Middlewares: authMiddleware,
+	}, handler.DeletePropertyHandler)
 }

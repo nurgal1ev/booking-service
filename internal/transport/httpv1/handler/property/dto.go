@@ -66,3 +66,13 @@ type UpdatePropertyOutput struct {
 		PropertyType  string
 	}
 }
+
+type DeletePropertyInput struct {
+	ID uint `path:"id"`
+}
+
+type DeletePropertyOutput struct {
+	Body struct {
+		Message string `json:"message"`
+	}
+}
