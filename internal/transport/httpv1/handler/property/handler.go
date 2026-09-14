@@ -107,3 +107,56 @@ func (h *PropertyHandler) GetPropertyHandler(ctx context.Context, input *GetProp
 		},
 	}, nil
 }
+
+func (h *PropertyHandler) UpdatePropertyHandler(ctx context.Context, input *UpdatePropertyInput) (*UpdatePropertyOutput, error) {
+	propertyID, err := h.propertyService.GetById(ctx, input.ID)
+	if err != nil {
+		return nil, huma.Error404NotFound("property not found")
+	}
+
+	userID, ok := middleware.GetUserIDFromContext(ctx)
+	if !ok || userID == 0 {
+		return nil, huma.Error401Unauthorized("user not authenticated")
+	}
+
+	userRole, _ := middleware.GetUserRoleFromContext(ctx)
+
+	if propertyID.OwnerID != userID {
+		return nil, huma.Error403Forbidden("forbidden")
+	}
+
+	req := &property.UpdatePropertyRequest{
+		Name:          input.Body.Name,
+		Description:   input.Body.Description,
+		Address:       input.Body.Address,
+		City:          input.Body.City,
+		Country:       input.Body.Country,
+		PricePerNight: input.Body.PricePerNight,
+		PropertyType:  input.Body.PropertyType,
+	}
+
+	updatedProperty, err := h.propertyService.Update(ctx, input.ID, userID, userRole, req)
+	if err != nil {
+		return nil, huma.Error400BadRequest(err.Error())
+	}
+
+	return &UpdatePropertyOutput{
+		Body: struct {
+			Name          string
+			Description   string
+			Address       string
+			City          string
+			Country       string
+			PricePerNight int
+			PropertyType  string
+		}{
+			Name:          updatedProperty.Name,
+			Description:   updatedProperty.Description,
+			Address:       updatedProperty.Address,
+			City:          updatedProperty.City,
+			Country:       updatedProperty.Country,
+			PricePerNight: updatedProperty.PricePerNight,
+			PropertyType:  updatedProperty.PropertyType,
+		},
+	}, nil
+}

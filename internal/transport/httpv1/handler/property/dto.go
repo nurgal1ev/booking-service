@@ -43,15 +43,15 @@ type GetPropertyOutput struct {
 }
 
 type UpdatePropertyInput struct {
-	ID   uint `path: "id"`
+	ID   uint `path:"id"`
 	Body struct {
-		Name          *string `json: "Name"`
-		Description   *string `json: "description"`
-		Address       *string `json: "address"`
-		City          *string `josn: "city"`
-		Country       *string
-		PricePerNight *int
-		PropertyType  *string
+		Name          *string `json:"Name"`
+		Description   *string `json:"description"`
+		Address       *string `json:"address"`
+		City          *string `json:"city"`
+		Country       *string `json:"country"`
+		PricePerNight *int    `json:"price_per_night"`
+		PropertyType  *string `json:"property_type"`
 	}
 }
 

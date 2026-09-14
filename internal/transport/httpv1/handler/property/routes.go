@@ -29,4 +29,14 @@ func RegisterRoutes(api huma.API, handler *PropertyHandler, authSecret string) {
 		Tags:        []string{"Properties"},
 		Description: "Возвращает объект недвижимости по ID",
 	}, handler.GetPropertyHandler)
+
+	huma.Register(api, huma.Operation{
+		Method:      http.MethodPost,
+		Path:        "/api/v1/properties/{id}",
+		Summary:     "Обновить объект",
+		Tags:        []string{"Properties"},
+		Description: "Обновить объект",
+		Security:    []map[string][]string{{"jwt": {}}},
+		Middlewares: authMiddleware,
+	}, handler.UpdatePropertyHandler)
 }
