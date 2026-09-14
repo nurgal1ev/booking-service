@@ -31,7 +31,7 @@ func RegisterRoutes(api huma.API, handler *PropertyHandler, authSecret string) {
 	}, handler.GetPropertyHandler)
 
 	huma.Register(api, huma.Operation{
-		Method:      http.MethodPost,
+		Method:      http.MethodPatch,
 		Path:        "/api/v1/properties/{id}",
 		Summary:     "Обновить объект",
 		Tags:        []string{"Properties"},
