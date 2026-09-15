@@ -12,6 +12,8 @@ type Property struct {
 	PricePerNight int
 	PropertyType  string `gorm:"default:hotel"`
 
+	Units []Unit `gorm:"foreignKey:PropertyID"`
+
 	OwnerID uint
-	Owner   User `gorm:"foreignkey:OwnerID"`
+	Owner   User `gorm:"foreignKey:OwnerID"`
 }

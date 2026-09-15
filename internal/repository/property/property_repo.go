@@ -43,7 +43,7 @@ func (p *PropertyRepo) Create(ctx context.Context, property *models.Property) er
 
 func (p *PropertyRepo) FindByID(ctx context.Context, id uint) (*models.Property, error) {
 	var property models.Property
-	err := p.db.WithContext(ctx).Where("id = ?", id).First(&property).Error
+	err := p.db.WithContext(ctx).Preload("Units", nil).Where("id = ?", id).First(&property).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
