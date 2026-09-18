@@ -2,6 +2,8 @@ package unit
 
 import (
 	"context"
+	"errors"
+	"strings"
 
 	"github.com/nurgal1ev/booking-service/internal/models"
 	"github.com/nurgal1ev/booking-service/internal/repository/property"
@@ -29,6 +31,46 @@ type Unit struct {
 	IsAvailable   bool
 }
 
-func (s *UnitService) Create(ctx context.Context, u *Unit) (*models.Unit, error) {
-	return nil, err
+func (u *Unit) Validate() error {
+	if u.PricePerNight <= 0 {
+		return errors.New("price per night must be greater than 0")
+	}
+	if u.Capacity <= 0 {
+		return errors.New("capacity must be greater than 0")
+	}
+	if strings.TrimSpace(u.Name) == "" {
+		return errors.New("name is required")
+	}
+	return nil
+}
+
+func (s *UnitService) Create(ctx context.Context, propertyID uint, userID uint, u *Unit) (*models.Unit, error) {
+	property, err := s.propertyRepo.FindByID(ctx, propertyID)
+	if err != nil {
+		return nil, err
+	}
+
+	if property.OwnerID != userID {
+		return nil, errors.New("you don't have permission to modify this unit")
+	}
+
+	if err := u.Validate(); err != nil {
+		return nil, err
+	}
+
+	var unit = models.Unit{
+		Name:          u.Name,
+		Description:   u.Description,
+		PricePerNight: u.PricePerNight,
+		Capacity:      u.Capacity,
+		IsAvailable:   u.IsAvailable,
+		PropertyID:    propertyID,
+	}
+
+	err = s.unitRepo.Create(ctx, &unit)
+	if err != nil {
+		return nil, err
+	}
+
+	return &unit, nil
 }
