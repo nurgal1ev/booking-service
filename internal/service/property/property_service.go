@@ -86,6 +86,10 @@ func (s *PropertyService) Create(ctx context.Context, p *Property) (*models.Prop
 		return nil, errors.New("user not found")
 	}
 
+	if err := p.Validate(); err != nil {
+		return nil, err
+	}
+
 	var property = models.Property{
 		Name:          p.Name,
 		Description:   p.Description,
