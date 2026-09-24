@@ -10,11 +10,14 @@ import (
 	propertyHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/property"
 
 	userHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/user"
+
+	unitHandler "github.com/nurgal1ev/booking-service/internal/transport/httpv1/handler/unit"
 )
 
 type Handlers struct {
 	User     *userHandler.UserHandler
 	Property *propertyHandler.PropertyHandler
+	Unit     *unitHandler.UnitHandler
 }
 
 func StartServer(h Handlers, cfg *config.Config) {
