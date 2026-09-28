@@ -96,6 +96,19 @@ func (s *UnitService) Create(ctx context.Context, propertyID uint, userID uint, 
 	return &unit, nil
 }
 
+func (s *UnitService) GetByPropertyID(ctx context.Context, propertyID uint) ([]*models.Unit, error) {
+	if propertyID == 0 {
+		return nil, errors.New("invalid id")
+	}
+
+	unit, err := s.unitRepo.FindByPropertyID(ctx, propertyID)
+	if err != nil {
+		return nil, err
+	}
+
+	return unit, nil
+}
+
 func (s *UnitService) Update(ctx context.Context, id uint, userID uint, req *UpdateUnitRequest) (*models.Unit, error) {
 	unitId, err := s.unitRepo.FindByID(ctx, id)
 	if err != nil {
