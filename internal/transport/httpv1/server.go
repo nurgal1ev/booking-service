@@ -45,6 +45,7 @@ func StartServer(h Handlers, cfg *config.Config) {
 	api := humachi.New(r, humaCfg)
 	userHandler.RegisterRoutes(api, h.User)
 	propertyHandler.RegisterRoutes(api, h.Property, cfg.Auth.Secret)
+	unitHandler.RegisterRoutes(api, h.Unit, cfg.Auth.Secret)
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		panic(err)
