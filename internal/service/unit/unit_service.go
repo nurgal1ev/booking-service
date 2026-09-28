@@ -52,6 +52,19 @@ func (u *Unit) Validate() error {
 	return nil
 }
 
+func (r *UpdateUnitRequest) Validate() error {
+	if r.PricePerNight != nil && *r.PricePerNight <= 0 {
+		return errors.New("price per night must be greater than 0")
+	}
+	if r.Capacity != nil && *r.Capacity <= 0 {
+		return errors.New("capacity must be greater than 0")
+	}
+	if r.Name != nil && strings.TrimSpace(*r.Name) == "" {
+		return errors.New("name cannot be empty")
+	}
+	return nil
+}
+
 func (s *UnitService) Create(ctx context.Context, propertyID uint, userID uint, u *Unit) (*models.Unit, error) {
 	property, err := s.propertyRepo.FindByID(ctx, propertyID)
 	if err != nil {
@@ -102,6 +115,10 @@ func (s *UnitService) Update(ctx context.Context, id uint, userID uint, req *Upd
 		return nil, errors.New("property not found")
 	}
 
+	if propertyID.OwnerID != userID {
+		return nil, errors.New("you don't have permission to update this unit")
+	}
+
 	request := &unit.UpdateUnitRequest{
 		Name:          req.Name,
 		Description:   req.Description,
@@ -110,10 +127,45 @@ func (s *UnitService) Update(ctx context.Context, id uint, userID uint, req *Upd
 		IsAvailable:   req.IsAvailable,
 	}
 
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
+
 	err = s.unitRepo.Update(ctx, id, request)
 	if err != nil {
 		return nil, err
 	}
 
 	return s.unitRepo.FindByID(ctx, id)
+}
+
+func (s *UnitService) Delete(ctx context.Context, id uint, userID uint, userRole string) error {
+	unitId, err := s.unitRepo.FindByID(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if unitId == nil {
+		return errors.New("unit not found")
+	}
+
+	propertyID, err := s.propertyRepo.FindByID(ctx, unitId.PropertyID)
+	if err != nil {
+		return err
+	}
+
+	if propertyID == nil {
+		return errors.New("property not found")
+	}
+
+	if propertyID.OwnerID != userID {
+		return errors.New("you don't have permission to delete this unit")
+	}
+
+	err = s.unitRepo.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
