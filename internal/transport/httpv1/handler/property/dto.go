@@ -31,14 +31,15 @@ type GetPropertyInput struct {
 
 type GetPropertyOutput struct {
 	Body struct {
-		ID            uint   `json:"id"`
-		Name          string `json:"name"`
-		Description   string `json:"description"`
-		Address       string `json:"address"`
-		City          string `json:"city"`
-		Country       string `json:"country"`
-		PricePerNight int    `json:"price_per_night"`
-		PropertyType  string `json:"property_type"`
+		ID            uint       `json:"id"`
+		Name          string     `json:"name"`
+		Description   string     `json:"description"`
+		Address       string     `json:"address"`
+		City          string     `json:"city"`
+		Country       string     `json:"country"`
+		PricePerNight int        `json:"price_per_night"`
+		PropertyType  string     `json:"property_type"`
+		Units         []*UnitDTO `json:"units"`
 	}
 }
 
@@ -75,4 +76,13 @@ type DeletePropertyOutput struct {
 	Body struct {
 		Message string `json:"message"`
 	}
+}
+
+type UnitDTO struct {
+	ID            uint   `json:"id"`
+	Name          string `json:"name"`
+	Description   string `json:"description"`
+	PricePerNight int    `json:"price_per_night"`
+	Capacity      int    `json:"capacity"`
+	IsAvailable   bool   `json:"is_available"`
 }
