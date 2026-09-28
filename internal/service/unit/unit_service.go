@@ -31,6 +31,14 @@ type Unit struct {
 	IsAvailable   bool
 }
 
+type UpdateUnitRequest struct {
+	Name          *string
+	Description   *string
+	PricePerNight *int
+	Capacity      *int
+	IsAvailable   *bool
+}
+
 func (u *Unit) Validate() error {
 	if u.PricePerNight <= 0 {
 		return errors.New("price per night must be greater than 0")
@@ -73,4 +81,39 @@ func (s *UnitService) Create(ctx context.Context, propertyID uint, userID uint, 
 	}
 
 	return &unit, nil
+}
+
+func (s *UnitService) Update(ctx context.Context, id uint, userID uint, req *UpdateUnitRequest) (*models.Unit, error) {
+	unitId, err := s.unitRepo.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if unitId == nil {
+		return nil, errors.New("unit not found")
+	}
+
+	propertyID, err := s.propertyRepo.FindByID(ctx, unitId.PropertyID)
+	if err != nil {
+		return nil, err
+	}
+
+	if propertyID == nil {
+		return nil, errors.New("property not found")
+	}
+
+	request := &unit.UpdateUnitRequest{
+		Name:          req.Name,
+		Description:   req.Description,
+		PricePerNight: req.PricePerNight,
+		Capacity:      req.Capacity,
+		IsAvailable:   req.IsAvailable,
+	}
+
+	err = s.unitRepo.Update(ctx, id, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.unitRepo.FindByID(ctx, id)
 }
