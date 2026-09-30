@@ -22,4 +22,12 @@ func RegisterRoutes(api huma.API, handler *UnitHandler, authSecret string) {
 		Middlewares:   authMiddleware,
 		DefaultStatus: http.StatusCreated,
 	}, handler.CreateUnitHandler)
+
+	huma.Register(api, huma.Operation{
+		Method:        http.MethodGet,
+		Path:          "/api/v1/properties/{id}/units",
+		Summary:       "Получить комнату",
+		Tags:          []string{"Units"},
+		Description:   "Получить комнату у объекта",
+	}, handler.GetUnitByPropertyIdHandler)
 }
