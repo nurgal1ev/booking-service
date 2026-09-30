@@ -59,9 +59,9 @@ func (h *UnitHandler) GetUnitByPropertyIdHandler(ctx context.Context, input *Get
 		return nil, huma.Error404NotFound("unit not found")
 	}
 
-	unitDTOs := make([]UnitDTO, len(units))
+	unitDTOs := make([]*Unit, len(units))
 	for i, unit := range units {
-		unitDTOs[i] = UnitDTO{
+		unitDTOs[i] = &Unit{
 			ID:            unit.ID,
 			Name:          unit.Name,
 			Description:   unit.Description,

@@ -85,9 +85,9 @@ func (h *PropertyHandler) GetPropertyHandler(ctx context.Context, input *GetProp
 		return nil, huma.Error404NotFound("property not found")
 	}
 
-	unitsDTOs := make([]*UnitDTO, len(property.Units))
+	unitsDTOs := make([]*PropertyUnitDTO, len(property.Units))
 	for i, unit := range property.Units {
-		unitsDTOs[i] = &UnitDTO{
+		unitsDTOs[i] = &PropertyUnitDTO{
 			ID:            unit.ID,
 			Name:          unit.Name,
 			Description:   unit.Description,
@@ -99,15 +99,15 @@ func (h *PropertyHandler) GetPropertyHandler(ctx context.Context, input *GetProp
 
 	return &GetPropertyOutput{
 		Body: struct {
-			ID            uint       `json:"id"`
-			Name          string     `json:"name"`
-			Description   string     `json:"description"`
-			Address       string     `json:"address"`
-			City          string     `json:"city"`
-			Country       string     `json:"country"`
-			PricePerNight int        `json:"price_per_night"`
-			PropertyType  string     `json:"property_type"`
-			Units         []*UnitDTO `json:"units"`
+			ID            uint               `json:"id"`
+			Name          string             `json:"name"`
+			Description   string             `json:"description"`
+			Address       string             `json:"address"`
+			City          string             `json:"city"`
+			Country       string             `json:"country"`
+			PricePerNight int                `json:"price_per_night"`
+			PropertyType  string             `json:"property_type"`
+			Units         []*PropertyUnitDTO `json:"units"`
 		}{
 			ID:            property.ID,
 			Name:          property.Name,

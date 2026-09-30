@@ -1,12 +1,12 @@
 package unit
 
-type UnitDTO struct {
-	ID            uint
-	Name          string
-	Description   string
-	PricePerNight int
-	Capacity      int
-	IsAvailable   bool
+type Unit struct {
+	ID            uint   `json:"id"`
+	Name          string `json:"name"`
+	Description   string `json:"description"`
+	PricePerNight int    `json:"price_per_night"`
+	Capacity      int    `json:"capacity"`
+	IsAvailable   bool   `json:"is_available"`
 }
 
 type CreateUnitInput struct {
@@ -34,6 +34,5 @@ type GetUnitInput struct {
 }
 
 type GetUnitOutput struct {
-	PropertyID uint `json:"property_id"`
-	Body       []UnitDTO
+	Body []*Unit
 }
