@@ -75,3 +75,7 @@ func (h *UnitHandler) GetUnitByPropertyIdHandler(ctx context.Context, input *Get
 		Body: unitDTOs,
 	}, nil
 }
+
+func (h *UnitHandler) UpdateUnitHandler(ctx context.Context, input *UpdateUnitInput) (*UpdateUnitOutput, error) {
+	return &UpdateUnitOutput{}, nil
+}

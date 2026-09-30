@@ -36,3 +36,18 @@ type GetUnitInput struct {
 type GetUnitOutput struct {
 	Body []*Unit
 }
+
+type UpdateUnitInput struct {
+	ID   uint `path:"ID"`
+	Body struct {
+		Name          *string `json:"name"`
+		Description   *string `json:"description"`
+		Capacity      *int    `json:"capacity"`
+		PricePerNight *int    `json:"price_per_night"`
+		IsAvailable   *bool   `json:"is_availabale"`
+	}
+}
+
+type UpdateUnitOutput struct {
+	Body Unit
+}
