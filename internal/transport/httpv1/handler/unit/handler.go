@@ -52,3 +52,26 @@ func (h *UnitHandler) CreateUnitHandler(ctx context.Context, input *CreateUnitIn
 		},
 	}, nil
 }
+
+func (h *UnitHandler) GetUnitByPropertyIdHandler(ctx context.Context, input *GetUnitInput) (*GetUnitOutput, error) {
+	units, err := h.unitService.GetByPropertyID(ctx, input.PropertyID)
+	if err != nil {
+		return nil, huma.Error404NotFound("unit not found")
+	}
+
+	unitDTOs := make([]UnitDTO, len(units))
+	for i, unit := range units {
+		unitDTOs[i] = UnitDTO{
+			ID:            unit.ID,
+			Name:          unit.Name,
+			Description:   unit.Description,
+			Capacity:      unit.Capacity,
+			PricePerNight: unit.PricePerNight,
+			IsAvailable:   unit.IsAvailable,
+		}
+	}
+
+	return &GetUnitOutput{
+		Body: unitDTOs,
+	}, nil
+}
