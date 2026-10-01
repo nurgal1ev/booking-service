@@ -22,7 +22,15 @@ type PropertyUnitDTO struct {
 }
 
 type CreatePropertyInput struct {
-	Body Property
+	Body struct {
+		Name          string `json:"name,omitempty" minLength:"1" maxLength:"255" pattern:"^[a-zA-Zа-яА-Я0-9\\s]+$"`
+		Description   string `json:"description,omitempty" maxLength:"10000" pattern:"^[\\p{L}\\p{N}\\p{P}\\p{Z}\\n\\r]+$"`
+		Address       string `json:"address"`
+		City          string `json:"city"`
+		Country       string `json:"country"`
+		PricePerNight int    `json:"price_per_night"`
+		PropertyType  string `json:"property_type"`
+	}
 }
 
 type CreatePropertyOutput struct {
