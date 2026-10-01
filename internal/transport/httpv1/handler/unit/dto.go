@@ -2,7 +2,7 @@ package unit
 
 type Unit struct {
 	ID            uint   `json:"id"`
-	Name          string `json:"name"`
+	Name          string `json:"name,omitempty" minLength:"1" maxLength:"55" pattern:"^[a-zA-Zа-яА-Я0-9\\s]+$"`
 	Description   string `json:"description"`
 	PricePerNight int    `json:"price_per_night"`
 	Capacity      int    `json:"capacity"`
@@ -12,7 +12,7 @@ type Unit struct {
 type CreateUnitInput struct {
 	PropertyID uint `path:"id"`
 	Body       struct {
-		Name          string `json:"name"`
+		Name          string `json:"name,omitempty" minLength:"1" maxLength:"55" pattern:"^[a-zA-Zа-яА-Я0-9\\s]+$"`
 		Description   string `json:"description"`
 		Capacity      int    `json:"capacity"`
 		PricePerNight int    `json:"price_per_night"`
@@ -40,8 +40,8 @@ type GetUnitOutput struct {
 type UpdateUnitInput struct {
 	ID   uint `path:"id"`
 	Body struct {
-		Name          *string `json:"name"`
-		Description   *string `json:"description"`
+		Name          *string `json:"name,omitempty" minLength:"1" maxLength:"55" pattern:"^[a-zA-Zа-яА-Я0-9\\s]+$"`
+		Description   *string `json:"description,omitempty" maxLength:"10000" pattern:"^[\\p{L}\\p{N}\\p{P}\\p{Z}\\n\\r]+$"`
 		Capacity      *int    `json:"capacity"`
 		PricePerNight *int    `json:"price_per_night"`
 		IsAvailable   *bool   `json:"is_available"`
