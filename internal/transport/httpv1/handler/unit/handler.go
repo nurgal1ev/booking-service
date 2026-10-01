@@ -37,14 +37,7 @@ func (h *UnitHandler) CreateUnitHandler(ctx context.Context, input *CreateUnitIn
 	}
 
 	return &CreateUnitOutput{
-		Body: struct {
-			ID            uint   `json:"id"`
-			Name          string `json:"name"`
-			Description   string `json:"description"`
-			Capacity      int    `json:"capacity"`
-			PricePerNight int    `json:"price_per_night"`
-		}{
-			ID:            result.ID,
+		Body: Unit{
 			Name:          result.Name,
 			Description:   result.Description,
 			Capacity:      result.Capacity,
