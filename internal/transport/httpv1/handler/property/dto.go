@@ -1,28 +1,32 @@
 package property
 
+type Property struct {
+	ID            uint               `json:"id"`
+	Name          string             `json:"name,omitempty" minLength:"1" maxLength:"255" pattern:"^[a-zA-Zа-яА-Я0-9\\s]+$"`
+	Description   string             `json:"description,omitempty" maxLength:"10000" pattern:"^[\\p{L}\\p{N}\\p{P}\\p{Z}\\n\\r]+$"`
+	Address       string             `json:"address"`
+	City          string             `json:"city"`
+	Country       string             `json:"country"`
+	PricePerNight int                `json:"price_per_night"`
+	PropertyType  string             `json:"property_type"`
+	Units         []*PropertyUnitDTO `json:"units"`
+}
+
+type PropertyUnitDTO struct {
+	ID            uint   `json:"id"`
+	Name          string `json:"name"`
+	Description   string `json:"description"`
+	PricePerNight int    `json:"price_per_night"`
+	Capacity      int    `json:"capacity"`
+	IsAvailable   bool   `json:"is_available"`
+}
+
 type CreatePropertyInput struct {
-	Body struct {
-		Name          string `json:"name,omitempty" minLength:"1" maxLength:"255" pattern:"^[a-zA-Zа-яА-Я0-9\\s]+$"`
-		Description   string `json:"description,omitempty" maxLength:"10000" pattern:"^[\\p{L}\\p{N}\\p{P}\\p{Z}\\n\\r]+$"`
-		Address       string `json:"address"`
-		City          string `json:"city"`
-		Country       string `json:"country"`
-		PricePerNight int    `json:"price_per_night"`
-		PropertyType  string `json:"property_type"`
-	}
+	Body Property
 }
 
 type CreatePropertyOutput struct {
-	Body struct {
-		ID            uint   `json:"id"`
-		Name          string `json:"name"`
-		Description   string `json:"description"`
-		Address       string `json:"address"`
-		City          string `json:"city"`
-		Country       string `json:"country"`
-		PricePerNight int    `json:"price_per_night"`
-		PropertyType  string `json:"property_type"`
-	}
+	Body Property
 }
 
 type GetPropertyInput struct {
@@ -30,17 +34,7 @@ type GetPropertyInput struct {
 }
 
 type GetPropertyOutput struct {
-	Body struct {
-		ID            uint               `json:"id"`
-		Name          string             `json:"name"`
-		Description   string             `json:"description"`
-		Address       string             `json:"address"`
-		City          string             `json:"city"`
-		Country       string             `json:"country"`
-		PricePerNight int                `json:"price_per_night"`
-		PropertyType  string             `json:"property_type"`
-		Units         []*PropertyUnitDTO `json:"units"`
-	}
+	Body Property
 }
 
 type UpdatePropertyInput struct {
@@ -57,15 +51,7 @@ type UpdatePropertyInput struct {
 }
 
 type UpdatePropertyOutput struct {
-	Body struct {
-		Name          string
-		Description   string
-		Address       string
-		City          string
-		Country       string
-		PricePerNight int
-		PropertyType  string
-	}
+	Body Property
 }
 
 type DeletePropertyInput struct {
@@ -76,13 +62,4 @@ type DeletePropertyOutput struct {
 	Body struct {
 		Message string `json:"message"`
 	}
-}
-
-type PropertyUnitDTO struct {
-	ID            uint   `json:"id"`
-	Name          string `json:"name"`
-	Description   string `json:"description"`
-	PricePerNight int    `json:"price_per_night"`
-	Capacity      int    `json:"capacity"`
-	IsAvailable   bool   `json:"is_available"`
 }

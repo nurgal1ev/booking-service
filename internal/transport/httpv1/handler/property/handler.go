@@ -53,22 +53,10 @@ func (h *PropertyHandler) CreatePropertyHandler(ctx context.Context, input *Crea
 	}
 
 	return &CreatePropertyOutput{
-		Body: struct {
-			ID            uint   `json:"id"`
-			Name          string `json:"name"`
-			Description   string `json:"description"`
-			Address       string `json:"address"`
-			City          string `json:"city"`
-			Country       string `json:"country"`
-			PricePerNight int    `json:"price_per_night"`
-			PropertyType  string `json:"property_type"`
-		}{
-			ID:            result.ID,
+		Body: Property{
 			Name:          result.Name,
 			Description:   result.Description,
 			Address:       result.Address,
-			City:          result.City,
-			Country:       result.Country,
 			PricePerNight: result.PricePerNight,
 			PropertyType:  result.PropertyType,
 		},
@@ -98,23 +86,11 @@ func (h *PropertyHandler) GetPropertyHandler(ctx context.Context, input *GetProp
 	}
 
 	return &GetPropertyOutput{
-		Body: struct {
-			ID            uint               `json:"id"`
-			Name          string             `json:"name"`
-			Description   string             `json:"description"`
-			Address       string             `json:"address"`
-			City          string             `json:"city"`
-			Country       string             `json:"country"`
-			PricePerNight int                `json:"price_per_night"`
-			PropertyType  string             `json:"property_type"`
-			Units         []*PropertyUnitDTO `json:"units"`
-		}{
+		Body: Property{
 			ID:            property.ID,
 			Name:          property.Name,
 			Description:   property.Description,
 			Address:       property.Address,
-			City:          property.City,
-			Country:       property.Country,
 			PricePerNight: property.PricePerNight,
 			PropertyType:  property.PropertyType,
 			Units:         unitsDTOs,
@@ -155,20 +131,10 @@ func (h *PropertyHandler) UpdatePropertyHandler(ctx context.Context, input *Upda
 	}
 
 	return &UpdatePropertyOutput{
-		Body: struct {
-			Name          string
-			Description   string
-			Address       string
-			City          string
-			Country       string
-			PricePerNight int
-			PropertyType  string
-		}{
+		Body: Property{
 			Name:          updatedProperty.Name,
 			Description:   updatedProperty.Description,
 			Address:       updatedProperty.Address,
-			City:          updatedProperty.City,
-			Country:       updatedProperty.Country,
 			PricePerNight: updatedProperty.PricePerNight,
 			PropertyType:  updatedProperty.PropertyType,
 		},
