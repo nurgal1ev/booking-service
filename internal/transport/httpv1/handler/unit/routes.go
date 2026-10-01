@@ -24,10 +24,30 @@ func RegisterRoutes(api huma.API, handler *UnitHandler, authSecret string) {
 	}, handler.CreateUnitHandler)
 
 	huma.Register(api, huma.Operation{
-		Method:        http.MethodGet,
-		Path:          "/api/v1/properties/{id}/units",
-		Summary:       "Получить комнату",
-		Tags:          []string{"Units"},
-		Description:   "Получить комнату у объекта",
+		Method:      http.MethodGet,
+		Path:        "/api/v1/properties/{id}/units",
+		Summary:     "Получить комнату",
+		Tags:        []string{"Units"},
+		Description: "Получить комнату у объекта",
 	}, handler.GetUnitByPropertyIdHandler)
+
+	huma.Register(api, huma.Operation{
+		Method:      http.MethodPatch,
+		Path:        "/api/v1/units/{id}",
+		Summary:     "Обновить комнату",
+		Tags:        []string{"Units"},
+		Description: "Обновить комнату у объекта",
+		Security:    []map[string][]string{{"jwt": {}}},
+		Middlewares: authMiddleware,
+	}, handler.UpdateUnitHandler)
+
+	huma.Register(api, huma.Operation{
+		Method:      http.MethodDelete,
+		Path:        "/api/v1/units/{id}",
+		Summary:     "Удалить комнату",
+		Tags:        []string{"Units"},
+		Description: "Удалить комнату у объекта",
+		Security:    []map[string][]string{{"jwt": {}}},
+		Middlewares: authMiddleware,
+	}, handler.DeleteUnitHandler)
 }
