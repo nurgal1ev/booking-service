@@ -78,3 +78,16 @@ func (r *BookingRepo) CreateWithLock(ctx context.Context, booking *models.Bookin
 		return nil
 	})
 }
+
+func (r *BookingRepo) FindByUserID(ctx context.Context, userID uint) ([]models.Booking, error) {
+	var bookings []models.Booking
+	err := r.db.WithContext(ctx).Where("user_id = ?", userID).Find(&bookings).Error
+	if err != nil {
+		return nil, err
+	}
+	return bookings, nil
+}
+
+func (r *BookingRepo) UpdateStatus(ctx context.Context, id uint, status string) error {
+	return r.db.WithContext(ctx).Model(&models.Booking{}).Where("id = ?", id).Update("status", status).Error
+}
