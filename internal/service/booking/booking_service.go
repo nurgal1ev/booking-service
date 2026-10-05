@@ -17,6 +17,10 @@ type Booking struct {
 	GuestCount int
 }
 
+type UpdateBookingRequest struct {
+	Status *string
+}
+
 type BookingService struct {
 	bookingRepo *booking.BookingRepo
 	unitRepo    *unit.UnitRepo
@@ -73,4 +77,56 @@ func (s *BookingService) GetUserBookings(ctx context.Context, userID uint) ([]mo
 	}
 
 	return bookings, nil
+}
+
+func (s *BookingService) Cancel(ctx context.Context, id uint, userID uint) (*models.Booking, error) {
+	bookingId, err := s.bookingRepo.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if bookingId == nil {
+		return nil, errors.New("booking not found")
+	}
+
+	if bookingId.UserID != userID {
+		return nil, errors.New("user is not authorized to cancel this booking")
+	}
+
+	if bookingId.Status != "pending" && bookingId.Status != "confirmed" {
+		return nil, errors.New("cannot cancel this booking")
+	}
+
+	err = s.bookingRepo.UpdateStatus(ctx, id, "cancelled")
+	if err != nil {
+		return nil, err
+	}
+
+	return s.bookingRepo.FindByID(ctx, id)
+}
+
+func (s *BookingService) Confirm(ctx context.Context, id uint, userRole string) error {
+	bookingId, err := s.bookingRepo.FindByID(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if bookingId == nil {
+		return errors.New("booking not found")
+	}
+
+	if userRole != "admin" {
+		return errors.New("user is not authorized to confirm this booking")
+	}
+
+	if bookingId.Status != "pending" {
+		return errors.New("cannot confirm this booking")
+	}
+
+	err = s.bookingRepo.UpdateStatus(ctx, id, "confirmed")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
