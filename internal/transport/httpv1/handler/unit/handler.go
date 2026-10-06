@@ -33,7 +33,7 @@ func (h *UnitHandler) CreateUnitHandler(ctx context.Context, input *CreateUnitIn
 
 	result, err := h.unitService.Create(ctx, input.PropertyID, userID, &unit)
 	if err != nil {
-		return nil, err
+		return nil, huma.Error400BadRequest(err.Error())
 	}
 
 	return &CreateUnitOutput{

@@ -49,7 +49,7 @@ func (h *PropertyHandler) CreatePropertyHandler(ctx context.Context, input *Crea
 
 	result, err := h.propertyService.Create(ctx, property)
 	if err != nil {
-		return nil, err
+		return nil, huma.Error400BadRequest(err.Error())
 	}
 
 	return &CreatePropertyOutput{

@@ -33,7 +33,7 @@ func (h *BookingHandler) Create(ctx context.Context, input *CreateBookingInput) 
 
 	result, err := h.bookingService.Create(ctx, userID, booking)
 	if err != nil {
-		return nil, err
+		return nil, huma.Error400BadRequest(err.Error())
 	}
 
 	return &CreateBookingOutput{Body: Booking{
